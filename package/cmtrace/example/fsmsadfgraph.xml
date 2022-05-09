@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<sdf3 version="1.0" type="fsmsadf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.es.ele.tue.nl/sdf3/xsd/sdf3-fsmsadf.xsd">
+  <applicationGraph name="CODESISSS10Example">
+    <fsmsadf>
+      <scenariograph name="graph" type="Graph">
+        <actor name="A" type="A" repetitions="1">
+          <port name="from_A" type="in" rate="1"></port>
+          <port name="to_A" type="out" rate="1"></port>
+          <port name="from_C" type="in" rate="1"></port>
+          <port name="to_B" type="out" rate="1"></port>
+        </actor>
+        <actor name="B" type="B" repetitions="1">
+          <port name="from_A" type="in" rate="1"></port>
+          <port name="to_C" type="out" rate="1"></port>
+        </actor>
+        <actor name="C" type="C" repetitions="1">
+          <port name="from_B" type="in" rate="1"></port>
+          <port name="to_A" type="out" rate="1"></port>
+        </actor>
+        <channel name="A2A" srcActor="A" srcPort="to_A" dstActor="A" dstPort="from_A" initialTokens="1" persistentTokenNames="t1"/>
+        <channel name="A2B" srcActor="A" srcPort="to_B" dstActor="B" dstPort="from_A" initialTokens="1" persistentTokenNames="t2"/>
+        <channel name="B2C" srcActor="B" srcPort="to_C" dstActor="C" dstPort="from_B" initialTokens="1" persistentTokenNames="t3"/>
+        <channel name="C2A" srcActor="C" srcPort="to_A" dstActor="A" dstPort="from_C" initialTokens="0" persistentTokenNames=""/>
+      </scenariograph>
+    </fsmsadf>
+    <fsmsadfProperties>
+      <defaultProperties>
+        <actorProperties actor="A">
+          <processor type="Proc" default="true">
+            <executionTime time="1"></executionTime>
+          </processor>
+        </actorProperties>
+        <actorProperties actor="B">
+          <processor type="Proc" default="true">
+            <executionTime time="2"></executionTime>
+          </processor>
+        </actorProperties>
+        <actorProperties actor="C">
+          <processor type="Proc" default="true">
+            <executionTime time="2"></executionTime>
+          </processor>
+        </actorProperties>
+        <channelProperties channel="A2A">
+          <tokenSize sz="1"></tokenSize>
+        </channelProperties>
+        <channelProperties channel="A2B">
+          <tokenSize sz="1"></tokenSize>
+        </channelProperties>
+        <channelProperties channel="B2C">
+          <tokenSize sz="1"></tokenSize>
+        </channelProperties>
+        <channelProperties channel="C2A">
+          <tokenSize sz="1"></tokenSize>
+        </channelProperties>
+      </defaultProperties>
+      <scenarios>
+        <scenario name="a" graph="graph" reward="0.2">
+        </scenario>
+        <scenario name="b" graph="graph" reward="0.7">
+        <actorProperties actor="B">
+          <processor type="Proc" default="true">
+            <executionTime time="3"></executionTime>
+          </processor>
+        </actorProperties>
+        <actorProperties actor="C">
+          <processor type="Proc" default="true">
+            <executionTime time="1"></executionTime>
+          </processor>
+        </actorProperties>
+        </scenario>
+      </scenarios>
+      <graphProperties>
+        <timeConstraints>
+          <throughput>1.0</throughput>
+        </timeConstraints>
+      </graphProperties>
+    </fsmsadfProperties>
+    <fsm initialstate="a">
+      <state name="a" scenario="a">
+        <transition destination="a"></transition>
+        <transition destination="b"></transition>
+      </state>
+      <state name="b" scenario="b">
+        <transition destination="a"></transition>
+        <transition destination="b"></transition>
+      </state>
+    </fsm>
+  </applicationGraph>
+</sdf3>

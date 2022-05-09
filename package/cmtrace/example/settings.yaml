@@ -1,0 +1,95 @@
+graphics:
+    # width of the strokes of the firing rectangles
+    firing-stroke-width: 0
+    # firing-color-mode is one of the following: by-actor, by-scenario, by-token, by-iteration
+    firing-color-mode: by-actor
+    # alternate light and darker versions of the color for subsequent firings, especially useful when stroke width is 0
+    alternate-color: true
+    # background color for alternate rows of the chart
+    row-background-color: [240, 240, 240]
+    background-color: [255, 255, 255]
+
+
+layout:
+    trace-length: auto
+    # relative extension of trace length beyond last task
+    trace-length-extension: 0.10
+    # font-size in mm (1pt = 0.35mm))
+    font-size: 4.0
+    # font in CSS style
+    font: "Calibri, Arial"
+    # width of individual lanes in gantt chart
+    trace-width: 4.0
+    horizontal-scale: 5
+    # unit determines granularity of horizontal scale
+    unit: auto
+    origin: [0.0, 0.0]
+    margin-top: 5.5
+    margin-bottom: 2.0
+    # distance between labels and chart
+    label-separation: 2.5
+    # length of the extending tick marks along the chart axis in mm
+    tick-length: 1.5
+    # separation between tick and numbers
+    tick-number-separation: 2
+    # line width of the vertical lines in the chart
+    column-linewidth: 0.25
+    # line width of the border lines in the chart
+    border-linewidth: 0.4
+
+    # define how the numbers at the ticks on the horizontal axis are formatted in python format notation, e.g., ":.0f"
+    time-stamp-format: auto
+    event-radius: 0.35
+    # vertical offset applied to overlapping firing bars in vertical units
+    overlap-vertical-offset: 0.333
+    # horizontal offset applied to overlapping events in mm
+    overlap-horizontal-offset: 10.0
+
+structure:
+    # rows define the rows shown in the Gantt chart, referring to actors or actor groups defined in structure:groups
+    rows: [A, B, C]
+    # define groups of actors that can be referred on the row layout and in the color map
+    # format:
+    # RowName:  [ list of actor names ]
+    # actor names are fully qualified with their scenario: scenario@actor
+    # as a special case, an actor name in the list can be replaced by a list of two lists, a list of scenarios and a list of actor names
+    # in that case the full cartesian product, all combinations of scenarios and actors are included (see the examples below)
+    groups: 
+        A: [ a@A, b@A ]
+        B: [
+            [
+                [a, b],
+                [B]
+            ]
+        ]
+        C: [
+            [
+                [a, b],
+                [C]
+            ]
+        ]
+
+
+colors:
+    palette: [
+        [255, 255, 0],
+        [0, 255, 255],
+        [255, 0, 255],
+        [255, 0, 0],
+        [0, 255, 0],
+        [0, 0, 255]
+    ]
+    # map individual actor names, or groups of actors as defined in the structure section to color indices
+    color-map: {
+        A: 0,
+        B: 1,
+        C: 2
+    }
+    # # map scenario names to color indices, used in by-scenario color mapping
+    # color-map: {
+    #     ss: 0,
+    #     sl: 1,
+    #     ls: 2,
+    #     ll: 3,
+    #     m: 4
+    # }

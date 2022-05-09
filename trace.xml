@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<trace>
+    <inputs>
+        <input id="0" timestamp="0" iteration="0">
+        <input id="1" timestamp="1" iteration="0">
+    </inputs>
+    <firings>
+        <firing id="0" start="0" end="2" actor="B" scenario="a" iteration="0"/>
+        <firing id="1" start="0" end="2" actor="C" scenario="a" iteration="0"/>
+        <firing id="2" start="2" end="3" actor="A" scenario="a" iteration="0"/>
+        <firing id="3" start="3" end="6" actor="B" scenario="b" iteration="1"/>
+        <firing id="4" start="2" end="3" actor="C" scenario="b" iteration="1"/>
+        <firing id="5" start="3" end="4" actor="A" scenario="b" iteration="1"/>
+        <firing id="6" start="4" end="7" actor="B" scenario="b" iteration="2"/>
+        <firing id="7" start="6" end="7" actor="C" scenario="b" iteration="2"/>
+        <firing id="8" start="7" end="8" actor="A" scenario="b" iteration="2"/>
+        <firing id="9" start="8" end="10" actor="B" scenario="a" iteration="3"/>
+        <firing id="10" start="7" end="9" actor="C" scenario="a" iteration="3"/>
+        <firing id="11" start="9" end="10" actor="A" scenario="a" iteration="3"/>
+    </firings>
+    <outputs>
+        <output id="0" timestamp="2" iteration="0">
+        <output id="1" timestamp="5" iteration="0">
+        <output id="2" timestamp="5" iteration="0">
+    </inputs>
+</trace>

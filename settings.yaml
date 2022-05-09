@@ -1,0 +1,3 @@
+graphics:
+    # firing-color-mode is one of the following: by-actor, by-scenario, by-token, by-iteration
+    firing-color-mode: by-iteration

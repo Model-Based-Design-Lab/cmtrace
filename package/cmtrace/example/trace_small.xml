@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<trace>
+    <firings>
+        <firing id="0" start="0.00" end="0.02" actor="B" scenario="a" iteration="0"/>
+        <firing id="1" start="0.00" end="0.02" actor="C" scenario="a" iteration="0"/>
+        <firing id="2" start="0.02" end="0.03" actor="A" scenario="a" iteration="0"/>
+        <firing id="3" start="0.03" end="0.06" actor="B" scenario="b" iteration="1"/>
+        <firing id="4" start="0.02" end="0.03" actor="C" scenario="b" iteration="1"/>
+        <firing id="5" start="0.03" end="0.04" actor="A" scenario="b" iteration="1"/>
+        <firing id="6" start="0.04" end="0.07" actor="B" scenario="b" iteration="2"/>
+        <firing id="7" start="0.06" end="0.07" actor="C" scenario="b" iteration="2"/>
+        <firing id="8" start="0.07" end="0.08" actor="A" scenario="b" iteration="2"/>
+        <firing id="9" start="0.08" end="0.10" actor="B" scenario="a" iteration="3"/>
+        <firing id="10" start="0.07" end="0.09" actor="C" scenario="a" iteration="3"/>
+        <firing id="11" start="0.09" end="0.10" actor="A" scenario="a" iteration="3"/>
+    </firings>
+</trace>
