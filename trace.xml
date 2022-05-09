@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <trace>
     <inputs>
-        <input id="0" timestamp="0" iteration="0">
-        <input id="1" timestamp="1" iteration="0">
+        <input id="0" timestamp="0" iteration="0"/>
+        <input id="1" timestamp="1" iteration="0"/>
     </inputs>
     <firings>
         <firing id="0" start="0" end="2" actor="B" scenario="a" iteration="0"/>
@@ -19,8 +19,8 @@
         <firing id="11" start="9" end="10" actor="A" scenario="a" iteration="3"/>
     </firings>
     <outputs>
-        <output id="0" timestamp="2" iteration="0">
-        <output id="1" timestamp="5" iteration="0">
-        <output id="2" timestamp="5" iteration="0">
-    </inputs>
+        <output id="0" timestamp="2" iteration="0"/>
+        <output id="1" timestamp="5" iteration="0"/>
+        <output id="2" timestamp="5" iteration="0"/>
+    </outputs>
 </trace>

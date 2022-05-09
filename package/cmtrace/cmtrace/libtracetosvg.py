@@ -37,14 +37,6 @@ class TraceActor:
         if len(l) == 0:
             return 0.0
         return max(map(lambda i: i[1], l))
-        # return reduce(f, self.firings.intervals(), (True, 0.0)
-        # first = True
-        # result = 0.0
-        # for firing in self.firing_intervals():
-        #     if first or firing[1] > result:
-        #         result = firing[1]
-        #         first = False
-        # return result
 
     def min_firing_time(self):
         """ return the smallest of starting times of all firing intervals or zero if the list is empty"""
@@ -52,13 +44,6 @@ class TraceActor:
         if len(l) == 0:
             return 0.0
         return min(map(lambda i: i[0], l))
-        # first = True
-        # result = 0.0
-        # for firing in self.firing_intervals():
-        #     if first or firing[0] < result:
-        #         result = firing[0]
-        #         first = False
-        # return result
 
 
 def read_trace_xml(filename, scale=1.0):
@@ -74,7 +59,10 @@ def read_trace_xml(filename, scale=1.0):
         error("Trace file ({0}) does not exist.".format(filename))
 
     # parse the XML
-    root = ET.parse(filename)
+    try:
+        root = ET.parse(filename)
+    except ET.ParseError as e:
+        error("Failed to parse xml file ({0}).\nReason: {1}".format(filename, str(e)))
 
     # dictionary to collect the actor traces
     # keys will be actor scenarios plus actor names
