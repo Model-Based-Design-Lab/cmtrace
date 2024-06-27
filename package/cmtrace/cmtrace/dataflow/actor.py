@@ -1,6 +1,6 @@
 """Class Actor Represents an actor in a dataflow graph"""
 
-from cmtrace.dataflow.maxplus import mpplus, mpmax, mpmax2, trace, MPMINUSINF, output_sequence
+from cmtrace.dataflow.maxplus import mp_plus, mp_max, mp_max2, trace, MP_MINUS_INF, output_sequence
 
 class Actor:
     """Represents an actor in a dataflow graph"""
@@ -13,7 +13,7 @@ class Actor:
         self.firings = []
         self.scenario = scenario
 
-    def add_channel_input(self, actor, initial_tokens=0, arcdelay=0, initial_time=MPMINUSINF):
+    def add_channel_input(self, actor, initial_tokens=0, arcdelay=0, initial_time=MP_MINUS_INF):
         """add a channel input dependency to another actor, including
         a time-offset arcdelay"""
         self.inputs[actor.name] = (actor, initial_tokens, arcdelay, initial_time)
@@ -30,7 +30,7 @@ class Actor:
     def completions(self):
         """returns the current completion times of the actor"""
         # add the actor delay to the firing times
-        return mpplus(self.firings, self.delay)
+        return mp_plus(self.firings, self.delay)
 
     def firing_intervals(self):
         """ Return a list of (start,end) pairs for all firings """
@@ -51,7 +51,7 @@ class Actor:
             raise Exception("Actor must have inputs")
 
         # determine the firings
-        self.firings = mpmax(*traces)
+        self.firings = mp_max(*traces)
         return oldfirings == len(self.firings)
 
     def set_scenario(self, scenario):
@@ -69,20 +69,20 @@ class Actor:
         # hack to deal with absence of primary inputs. Should be an infinitely
         # long sequence of minus inf.
         if len(self.primary_inputs) > 0:
-            self.firings = mpmax(*self.primary_inputs)
+            self.firings = mp_max(*self.primary_inputs)
         else:
-            self.firings = [MPMINUSINF] * len(scen_seq)
+            self.firings = [MP_MINUS_INF] * len(scen_seq)
 
         # state_inputs
         for _, (state, tokdel, arcdel) in self.state_inputs.items():
             if self.scenario is None:
                 raise Exception("SADF actor has no scenario.")
             splicedfirings = state.spliced_firings(scen_seq, self.scenario, tokdel)
-            self.firings = mpmax2(self.firings, mpplus(splicedfirings, arcdel))
+            self.firings = mp_max2(self.firings, mp_plus(splicedfirings, arcdel))
 
         # channel inputs
         for _, (act, tok, arcdel, tokinit) in self.inputs.items():
-            self.firings = mpmax2(self.firings, output_sequence(act.completions(), tok, arcdel, tokinit))
+            self.firings = mp_max2(self.firings, output_sequence(act.completions(), tok, arcdel, tokinit))
 
         return oldfirings == len(self.firings)
 

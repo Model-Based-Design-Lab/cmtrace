@@ -1,6 +1,6 @@
 """ provide color palettes """
 
-COLORPALETTE_LINES = [
+COLOR_PALETTE_LINES = [
     (0, 114, 190),
     (218, 83, 25),
     (238, 178, 32),
@@ -43,7 +43,7 @@ COLORPALETTE_LINES = [
     (119, 172, 48)
 ]
 
-COLORPALETTE_FILLS = [
+COLOR_PALETTE_FILLS = [
     (251, 180, 174),
     (179, 205, 227),
     (204, 235, 197),

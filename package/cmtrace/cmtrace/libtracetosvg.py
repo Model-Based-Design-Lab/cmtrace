@@ -2,9 +2,9 @@
 import os
 import xml.etree.ElementTree as ET
 from cmtrace.graphics.svggraphics import save_gantt_svg, save_vector_svg, convert_svg_to_pdf
-from cmtrace.graphics.colorpalette import COLORPALETTE_FILLS
+from cmtrace.graphics.colorpalette import COLOR_PALETTE_FILLS
 from cmtrace.graphics.tracesettings import TraceSettings
-from cmtrace.dataflow.maxplus import MPMINUSINF
+from cmtrace.dataflow.maxplus import MP_MINUS_INF
 from cmtrace.utils.utils import error
 
 from cmtrace.graphics.tracesettings import SCENARIO_SEPARATOR
@@ -141,13 +141,13 @@ def read_vector_trace_xml(filename, scale=1.0):
             # create a new entry if it is a new token; fill it with minus infinities
             # for the length of the existing sequences
             if not name in sequences:
-                sequences[name] = [MPMINUSINF] * (length-1)
+                sequences[name] = [MP_MINUS_INF] * (length-1)
             sequences[name].append(timestamp)
 
         # fill up all sequences to length
         for _, seq in sequences.items():
             if len(seq) < length:
-                seq.append(MPMINUSINF)
+                seq.append(MP_MINUS_INF)
         length += 1
 
     return sequences
@@ -166,7 +166,7 @@ def create_gantt_actors_all(actors):
     for (act_name, tact) in actors.items():
         # add to the list, with a color from the default palette
         gantt_actors.append((act_name, [tact],
-                             COLORPALETTE_FILLS[act_nr % (len(COLORPALETTE_FILLS))]))
+                             COLOR_PALETTE_FILLS[act_nr % (len(COLOR_PALETTE_FILLS))]))
         act_nr += 1
     return gantt_actors
 
@@ -212,7 +212,13 @@ def create_gantt_fig(trace_filename, svg_filename, settings=None):
         for row in rows:
             # collect the actors to be represented in this row
             if row in structure:
-                acts_list = [(actors[act] if act in actors else None) for act in structure[row]]
+                acts_list = []
+                for act in structure[row]:
+                    if act in actors:
+                        acts_list.append(actors[act])
+                    else:
+                        print(f"Warning: actor {act} not found (missing scenario specification s@A?).")
+                        acts_list.append(None)
             else:
                 acts_list = [actors[row]]
             gantt_actors.append((row, acts_list))
@@ -226,7 +232,7 @@ def create_gantt_fig(trace_filename, svg_filename, settings=None):
             parts = act_name.split(SCENARIO_SEPARATOR)
             act_name = parts[len(parts)-1]
             gantt_actors.append((act_name, [act]))
-            c_idx = (c_idx + 1) % len(COLORPALETTE_FILLS)
+            c_idx = (c_idx + 1) % len(COLOR_PALETTE_FILLS)
 
     save_gantt_svg(gantt_actors, arrivals, outputs, svg_filename, settings=settings)
     convert_svg_to_pdf(svg_filename)
@@ -276,7 +282,7 @@ def create_vector_fig(trace_filename, svg_filename, settings=None):
         sorted_tokens = sorted(event_seqs.items(), key=lambda a: a[1][0])
         for tok_name, seq in sorted_tokens:
             event_seq_rows.append((tok_name, seq))
-            c_idx = (c_idx + 1) % len(COLORPALETTE_FILLS)
+            c_idx = (c_idx + 1) % len(COLOR_PALETTE_FILLS)
 
 
     save_vector_svg(event_seq_rows, svg_filename, settings)
