@@ -5,8 +5,8 @@ build:
         - sudo apt-get -y update
         - sudo apt-get -y install python3-pip libcairo2-dev
         - cd  ./package/cmtrace/cmtrace/tests
-        - python -m pip install pytest
-        - python -m pytest . -v
+        - python3 -m pip install pytest
+        - python3 -m pytest . -v
 
     artifacts:
       expire_in: 14d
