@@ -3,9 +3,7 @@ build:
         - Ubuntu1804-64bit
     script:
         - sudo apt-get -y update
-        - sudo apt-get -y install python3-pip libcairo2-dev
-        - pwd
-        - ls
+        - sudo apt-get -y install python3-pip libcairo2-dev pytest
         - cd  ./package/cmtrace/cmtrace/tests
         - python -m pytest . -v
 
