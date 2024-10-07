@@ -3,7 +3,7 @@ from math import floor
 import os
 from functools import reduce
 from sys import modules as sysmodules
-from cmtrace.graphics.svgcanvas import SVGCanvas, MMPERPT
+from cmtrace.graphics.svgcanvas import SVGCanvas, MM_PER_PT
 from cmtrace.graphics.tracesettings import TraceSettings
 if 'cairosvg' in sysmodules:
     import cairosvg
@@ -25,7 +25,7 @@ class SVGTraceDrawer:
         """ modify the color to be used for alternating colors """
         return (col[0] * 0.9, col[1] * 0.9, col[2] * 0.9)
 
-    def draw_firings(self, firing_intervals, lb, ub):
+    def draw_firings(self, firing_intervals, lb, _ub):
         """ draw firings in figure; firings are tuple (start, end, actor name, scenario name)"""
         # sort the firings on start time
         firing_intervals.sort()
@@ -55,7 +55,7 @@ class SVGTraceDrawer:
             if coloring_mode == "by-actor":
                 f_color = color_map[firing[2]]
             elif coloring_mode == "by-iteration":
-                f_color = color_palette[firing[4] % len(color_palette)]
+                f_color = color_palette[firing[5] % len(color_palette)]
             elif coloring_mode == "by-scenario":
                 f_color = color_map[firing[3]]
             if self.settings.alternate_color():
@@ -84,10 +84,20 @@ class SVGTraceDrawer:
                             self.settings.scale_mm_per_unit_x(), self.settings.origin_y() \
                             +(lb+self.settings.overlap_offset()*active_offset)* \
                             self.settings.scale_mm_per_unit_y()
-                bottom_right = self.settings.scale_mm_per_unit_x()*(f_duration), \
+                width_height = self.settings.scale_mm_per_unit_x()*(f_duration), \
                             self.settings.scale_mm_per_unit_y()
-                self.canvas.draw_rect(top_left, bottom_right, f_color,
+                self.canvas.draw_rect(top_left, width_height, f_color,
                                       stroke_width=self.settings.firing_stroke_width())
+                if firing[4] is not None:
+                    self.canvas.draw_text(
+                        firing[4],
+                        (top_left[0]+width_height[0]/2, top_left[1]+width_height[1]/2),
+                        font=self.settings.font(),
+                        font_size=0.5*self.settings.font_size(),
+                        text_anchor="middle",
+                        alignment_baseline="central"
+                    )
+
             f_count += 1
             last_end = f_start+f_duration
 
@@ -117,21 +127,21 @@ class SVGTraceDrawer:
         mix = num_arrivals
         for (label, actor_list) in actors:
             self.draw_label(label, 0.5*(lb[mix]+ub[mix]))
-            scaled_firings = list()
+            scaled_firings = []
             for actor in actor_list:
                 if not actor is None:
                     fix = 0
                     for firing in actor.firing_intervals():
                         scaled_firings.append([firing[0]/unit, firing[1]/unit,
-                                               actor.name, actor.scenario, actor.text, fix])
+                                               actor.name, actor.scenario, firing[3], fix])
                         fix += 1
             self.draw_firings(scaled_firings, lb[mix], ub[mix])
             mix += 1
 
     def draw_arrivals(self, arrivals, offset):
         """ draw the arrival event sequences """
-        coloring_mode = self.settings.vector_color_mode()
-        color_index = self.settings.color_map()
+        # coloring_mode = self.settings.vector_color_mode()
+        # color_index = self.settings.color_map()
         nix = offset
         for label in arrivals.keys():
             # draw the label
@@ -196,7 +206,7 @@ class SVGTraceDrawer:
             # draw the label
             lx = self.settings.origin_x() - self.settings.label_separation()
             ly = self.settings.origin_y()+(nix+0.5)*self.settings.scale_mm_per_unit_y() + \
-                3.0*MMPERPT
+                3.0*MM_PER_PT
             self.canvas.draw_text(
                 label,
                 (lx, ly),
@@ -414,8 +424,8 @@ class SVGTraceDrawer:
         canvas = self.make_gantt_svg(actors, arrivals, outputs, filename)
         canvas.save()
 
-    def __make_vector_svg(self, event_seqs, filename='trace.svg', height_in_mm=200,
-                          width_in_mm=300):
+    def __make_vector_svg(self, event_seqs, filename='trace.svg', _height_in_mm=200,
+                          _width_in_mm=300):
         """ make a graph in svg of the event sequences and save to file """
 
         # determine settings
