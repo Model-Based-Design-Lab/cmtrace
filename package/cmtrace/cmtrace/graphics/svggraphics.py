@@ -440,7 +440,7 @@ class SVGTraceDrawer:
         if self.settings.height is None:
             self.settings.height = len(event_seqs) * self.settings.scale_mm_per_unit_y() + \
                 (self.settings.margin_top()+self.settings.margin_bottom())
-        offset_x = self.__label_size(list(event_seqs.keys()))
+        offset_x = self.__label_size([p[0] for p in event_seqs])
         if self.settings.width is None:
             self.settings.width = self.settings.length() * self.settings.scale_mm_per_unit_x() + \
                 offset_x
