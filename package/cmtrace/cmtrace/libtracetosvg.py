@@ -22,9 +22,9 @@ class TraceActor:
         self.scenario = scenario
         self.name = name
 
-    def add_firing(self, start, end, iteration):
+    def add_firing(self, start, end, iteration, text):
         """ add a firing to the list of firings """
-        self.firings.append((float(start), float(end), iteration))
+        self.firings.append((float(start), float(end), iteration, text))
 
     def firing_intervals(self):
         """ Return a list of (start,end, iteration) triples for all firings """
@@ -77,6 +77,9 @@ def read_trace_xml(filename, scale=1.0):
         end = scale*float(firing.attrib['end'])
         scenario = firing.attrib['scenario']
         iteration = firing.attrib['iteration']
+        text = None
+        if 'text' in firing.attrib:
+            text = firing.attrib['text']
 
         # create a new entry if it is a new actor
         if not scenario+SCENARIO_SEPARATOR+act in actors:
@@ -84,7 +87,7 @@ def read_trace_xml(filename, scale=1.0):
                                                                  scenario)
 
         # add the new firing
-        actors[scenario+SCENARIO_SEPARATOR+act].add_firing(start, end, iteration)
+        actors[scenario+SCENARIO_SEPARATOR+act].add_firing(start, end, iteration, text)
 
     inputs = {}
     for inp in root.findall("./inputs/input"):

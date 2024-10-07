@@ -4,7 +4,7 @@ import cairo
 from cmtrace.latexsvg.latexsvg import latex_to_svg
 
 # conversion constants
-MMPERPT = 0.352778
+MM_PER_PT = 0.352778
 
 # default font size
 DEFAULT_FONT_SIZE = 10
@@ -72,7 +72,7 @@ class SVGCanvas:
             font_size=the_font_size, font_family=font, text_anchor=text_anchor, \
                 alignment_baseline="auto"))
 
-    def draw_rect(self, insert, size, fillcolor=(0, 0, 0), stroke_width=MMPERPT, \
+    def draw_rect(self, insert, size, fillcolor=(0, 0, 0), stroke_width=MM_PER_PT, \
                   stroke_color=(0, 0, 0)):
         """ draw a rectangle """
         # add rectangle to the drawing
@@ -80,14 +80,14 @@ class SVGCanvas:
                     fill=svgwrite.rgb(*fillcolor), stroke_width=stroke_width, \
                     stroke=svgwrite.rgb(*stroke_color)))
 
-    def draw_line(self, start, end, stroke_width=MMPERPT, stroke_color=(0, 0, 0)):
+    def draw_line(self, start, end, stroke_width=MM_PER_PT, stroke_color=(0, 0, 0)):
         """
         draw a line from start (x1, y1) to end (x2, y2), using stroke_width
         """
         self.drawing.add(self.drawing.line(start=(start[0], start[1]), end=(end[0], end[1]), \
                     stroke_width=stroke_width, stroke=svgwrite.rgb(*stroke_color)))
 
-    def draw_path(self, path_spec, stroke_width=MMPERPT, stroke_color=(0, 0, 0), is_arrow=False, \
+    def draw_path(self, path_spec, stroke_width=MM_PER_PT, stroke_color=(0, 0, 0), is_arrow=False, \
                   fill='none', offset_pre=None, offset_post=None,
                   scale=None):
         """ add a path to the drawing, optionally apply offset and scale and optionally make
@@ -117,7 +117,7 @@ class SVGCanvas:
         if is_arrow:
             path.set_markers((None, None, self.arrow_marker))
 
-    def draw_circle(self, insert, radius, fillcolor=(0, 0, 0), stroke_width=MMPERPT,
+    def draw_circle(self, insert, radius, fillcolor=(0, 0, 0), stroke_width=MM_PER_PT,
                     stroke_color=(0, 0, 0)):
         """ draw a circle """
         self.drawing.add(self.drawing.circle(center=(insert[0], insert[1]), r=radius, \

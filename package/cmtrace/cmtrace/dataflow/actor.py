@@ -4,28 +4,28 @@ from cmtrace.dataflow.maxplus import mp_plus, mp_max, mp_max2, trace, MP_MINUS_I
 
 class Actor:
     """Represents an actor in a dataflow graph"""
-    def __init__(self, name, actdelay, scenario=None):
+    def __init__(self, name, act_delay, scenario=None):
         self.name = name
-        self.delay = actdelay
-        self.inputs = dict()
+        self.delay = act_delay
+        self.inputs = {}
         self.primary_inputs = []
-        self.state_inputs = dict()
+        self.state_inputs = {}
         self.firings = []
         self.scenario = scenario
 
-    def add_channel_input(self, actor, initial_tokens=0, arcdelay=0, initial_time=MP_MINUS_INF):
+    def add_channel_input(self, actor, initial_tokens=0, arc_delay=0, initial_time=MP_MINUS_INF):
         """add a channel input dependency to another actor, including
-        a time-offset arcdelay"""
-        self.inputs[actor.name] = (actor, initial_tokens, arcdelay, initial_time)
+        a time-offset arc_delay"""
+        self.inputs[actor.name] = (actor, initial_tokens, arc_delay, initial_time)
 
-    def add_state_input(self, state, tokendelay=0, arcdelay=0):
+    def add_state_input(self, state, token_delay=0, arc_delay=0):
         """Add a dependency on a state token for an SADF graph"""
-        self.state_inputs[state.name] = (state, tokendelay, arcdelay)
+        self.state_inputs[state.name] = (state, token_delay, arc_delay)
         return
 
-    def add_primary_input(self, priminput):
+    def add_primary_input(self, prim_input):
         """Add dependency to a primary input to the graph."""
-        self.primary_inputs.append(priminput)
+        self.primary_inputs.append(prim_input)
 
     def completions(self):
         """returns the current completion times of the actor"""
@@ -37,13 +37,13 @@ class Actor:
         return [(f, f+self.delay) for f in self.firings]
 
     def update_firings(self):
-        """Recomput the firings of the actor based on its input dependencies.
+        """Recompute the firings of the actor based on its input dependencies.
         Returns a boolean indicating if the computed firings remained the same."""
-        oldfirings = len(self.firings)
+        old_firings = len(self.firings)
         traces = []
         # collect all the incoming channels
-        for i, (act, tok, arcdel, tokinit) in self.inputs.items():
-            traces.append(output_sequence(act.completions(), tok, arcdel, tokinit))
+        for i, (act, tok, arc_del, tok_init) in self.inputs.items():
+            traces.append(output_sequence(act.completions(), tok, arc_del, tok_init))
         # collect traces for all primary inputs
         for i in self.primary_inputs:
             traces.append(i)
@@ -52,7 +52,7 @@ class Actor:
 
         # determine the firings
         self.firings = mp_max(*traces)
-        return oldfirings == len(self.firings)
+        return old_firings == len(self.firings)
 
     def set_scenario(self, scenario):
         """set the scenario in which the actor is active"""
