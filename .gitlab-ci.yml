@@ -8,8 +8,3 @@ build:
         - python3 -m pip install pytest pyyaml svgwrite pycairo
         - python3 -m pytest . -v
 
-    artifacts:
-      expire_in: 14d
-      when: always
-      paths:
-      - /builds/computational-modeling/cmtrace/package/cmtrace/cmtrace/test/output/
