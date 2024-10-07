@@ -4,7 +4,8 @@ build:
     script:
         - sudo apt-get -y update
         - sudo apt-get -y install python3-pip libcairo2-dev
-        - cd /builds/mgeilen/cmtrace/package/cmtrace/cmtrace/tests
+        - pwd
+        - cd  /builds/mgeilen/cmtrace/packages/cmtrace/cmtrace/tests
         - python -m pytest . -v
 
     artifacts:
