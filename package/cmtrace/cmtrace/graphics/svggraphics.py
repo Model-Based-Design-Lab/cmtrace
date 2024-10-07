@@ -123,7 +123,7 @@ class SVGTraceDrawer:
                     fix = 0
                     for firing in actor.firing_intervals():
                         scaled_firings.append([firing[0]/unit, firing[1]/unit,
-                                               actor.name, actor.scenario, fix])
+                                               actor.name, actor.scenario, actor.text, fix])
                         fix += 1
             self.draw_firings(scaled_firings, lb[mix], ub[mix])
             mix += 1
