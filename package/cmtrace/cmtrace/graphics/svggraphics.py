@@ -165,8 +165,10 @@ class SVGTraceDrawer:
         for arrival in seq:
             overlapped = False
             if prev is not None:
-                if (arrival - prev) / self.settings.unit()*self.settings.scale_mm_per_unit_x() < \
-                self.settings.overlap_horizontal_offset():
+                if ((arrival - prev) / self.settings.unit()*self.settings.scale_mm_per_unit_x() < \
+                self.settings.overlap_horizontal_offset()) and \
+                (arrival - prev) / self.settings.unit()*self.settings.scale_mm_per_unit_x() > \
+                -self.settings.overlap_horizontal_offset():
                     overlapped = True
                     arrival = prev + self.settings.overlap_horizontal_offset() / \
                         self.settings.scale_mm_per_unit_x() *  self.settings.unit()
