@@ -74,15 +74,21 @@ def read_trace_xml(filename, scale=1.0):
         act = firing.attrib['actor']
         start = scale*float(firing.attrib['start'])
         end = scale*float(firing.attrib['end'])
-        scen = firing.attrib['scenario']
-        iteration = firing.attrib['iteration']
+        if 'scenario' in firing.attrib:
+            scenario = firing.attrib['scenario']
+        else:
+            scenario = None
+        if 'iteration' in firing.attrib:
+            iteration = firing.attrib['iteration']
+        else:
+            iteration = None
 
         # create a new entry if it is a new actor
-        if not scen+SCENARIO_SEPARATOR+act in actors:
-            actors[scen+SCENARIO_SEPARATOR+act] = TraceActor(scen+SCENARIO_SEPARATOR+act, scen)
+        if not scenario+SCENARIO_SEPARATOR+act in actors:
+            actors[scenario+SCENARIO_SEPARATOR+act] = TraceActor(scenario+SCENARIO_SEPARATOR+act, scenario)
 
         # add the new firing
-        actors[scen+SCENARIO_SEPARATOR+act].add_firing(start, end, iteration)
+        actors[scenario+SCENARIO_SEPARATOR+act].add_firing(start, end, iteration)
 
     inputs = dict()
     for inp in root.findall("./inputs/input"):

@@ -95,7 +95,6 @@ class SVGTraceDrawer:
 
     def draw_traces(self, actors, num_arrivals, traceHeights):
         """ draw the actor traces. arrivals is used to determine the row to start drawing traces. """
-
         # compute the upper and lower bounds
         lb = []
         ub = []
@@ -114,7 +113,11 @@ class SVGTraceDrawer:
                 if not actor is None:
                     fix = 0
                     for firing in actor.firing_intervals():
-                        scaled_firings.append([firing[0]/unit, firing[1]/unit, actor.name, actor.scenario, fix])
+                        if firing[2] is not None:
+                            iteration = int(firing[2])
+                        else:
+                            iteration = fix
+                        scaled_firings.append([firing[0]/unit, firing[1]/unit, actor.name, actor.scenario, iteration])
                         fix += 1
             self.draw_firings(scaled_firings, lb[mix], ub[mix])
             mix += 1
