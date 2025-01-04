@@ -250,9 +250,11 @@ def create_gantt_fig(trace_filename, svg_filename, settings=None):
             else:
                 grouped_actors[act_name] = len(gantt_actors)
                 gantt_actors.append((act_name, [act]))
-            if settings.row_order() == "by-actor-name":
-                gantt_actors = sorted(gantt_actors, key=lambda a: a[0])
             c_idx = (c_idx + 1) % len(COLOR_PALETTE_FILLS)
+        if settings.row_order() == "by-actor-name":
+            print(len(gantt_actors))
+            gantt_actors = sorted(gantt_actors, key=lambda a: a[0])
+            print(len(gantt_actors))
 
     # gantt_actors: list of tuples with name, list of Actors
     save_gantt_svg(gantt_actors, arrivals, outputs, svg_filename, settings=settings)
