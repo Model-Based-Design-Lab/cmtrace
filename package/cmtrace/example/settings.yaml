@@ -48,6 +48,9 @@ layout:
     overlap-horizontal-offset: 10.0
 
 structure:
+    # order is one of the following: by-actor-name, by-first-firing
+    # it is ignored if rows are defined
+    row-order: by-first-firing
     # rows define the rows shown in the Gantt chart, referring to actors or actor groups defined in structure:groups
     rows: [A, B, C]
     # define groups of actors that can be referred on the row layout and in the color map

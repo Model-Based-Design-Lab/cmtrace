@@ -229,20 +229,32 @@ def create_gantt_fig(trace_filename, svg_filename, settings=None):
                         print(f"Warning: actor {act} not found (missing scenario specification s@A?).")
                         acts_list.append(None)
             else:
-                acts_list = [actors[row]]
+                if not row in actors:
+                    print(f"Warning: actor {row} not found.")
+                    acts_list = [None]
+                else:
+                    acts_list = [actors[row]]
             gantt_actors.append((row, acts_list))
     else:
         # make a default structure
         # gantt_actors: list of tuples with name, list of Actors
-        #TODO: group same actor in different scenarios together
         c_idx = 0
         sorted_actors = sorted(actors.items(), key=lambda a: a[1].min_firing_time())
+        grouped_actors = {}
         for act_name, act in sorted_actors:
             parts = act_name.split(SCENARIO_SEPARATOR)
             act_name = parts[len(parts)-1]
-            gantt_actors.append((act_name, [act]))
+            if act_name in grouped_actors:
+                g_idx = grouped_actors[act_name]
+                gantt_actors[g_idx][1].append(act)
+            else:
+                grouped_actors[act_name] = len(gantt_actors)
+                gantt_actors.append((act_name, [act]))
+            if settings.row_order() == "by-actor-name":
+                gantt_actors = sorted(gantt_actors, key=lambda a: a[0])
             c_idx = (c_idx + 1) % len(COLOR_PALETTE_FILLS)
 
+    # gantt_actors: list of tuples with name, list of Actors
     save_gantt_svg(gantt_actors, arrivals, outputs, svg_filename, settings=settings)
     convert_svg_to_pdf(svg_filename)
 

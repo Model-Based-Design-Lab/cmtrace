@@ -32,7 +32,8 @@ DEFAULTS = {
     'graphics:alternate-color': True,
     'graphics:show-text-labels': True,
     'graphics:background-color': (255, 255, 255),
-    'graphics:row-background-color': (240, 240, 240)
+    'graphics:row-background-color': (240, 240, 240),
+    'structure:row-order': "by-first-firing"
 }
 
 # TODO: raise exception on invalid settings
@@ -423,6 +424,11 @@ class TraceSettings():
             if key.startswith(node_label):
                 result[key[len(node_label)+1:]] = val
         return result
+
+    def row_order(self):
+        """ returns the row ordering """
+        return self.__get_value('structure:row-order')
+
 
     def groups(self):
         """ returns the groups of actors that are drawn on a single row """
