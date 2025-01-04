@@ -4,10 +4,7 @@ build:
     script:
         - sudo apt-get -y update
         - sudo apt-get -y install python3-pip libcairo2-dev
-        - cd /builds/mgeilen/cmtrace 
-        - bash ./ci/script/test.sh
-    artifacts:
-      expire_in: 14d
-      when: always
-      paths:
-      - /builds/mgeilen/cmtrace/packages/cmtrace/cmtrace/test/output/
+        - cd  ./package/cmtrace/cmtrace/tests
+        - python3 -m pip install pytest pyyaml svgwrite pycairo
+        - python3 -m pytest . -v
+

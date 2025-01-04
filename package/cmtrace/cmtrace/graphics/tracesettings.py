@@ -1,10 +1,8 @@
 """ Class to manage trace settings, defaults and reading from yaml file """
 
-from ast import Str
 from math import floor, log10, pow as mathpow
 from yaml import Loader as yaml_Loader, load as yaml_load
-from cmtrace.graphics.colorpalette import COLORPALETTE_FILLS, COLORPALETTE_LINES
-from cmtrace.utils.utils import warn, error
+from cmtrace.graphics.colorpalette import COLOR_PALETTE_FILLS, COLOR_PALETTE_LINES
 
 SCENARIO_SEPARATOR = '@'
 
@@ -39,15 +37,13 @@ DEFAULTS = {
 # TODO: raise exception on invalid settings
 
 class TraceSettingsException(Exception):
-    pass
-
-
+    """Exceptions in trace settings"""
 
 class TraceSettings():
     """Class TraceSetting manages trace settings, defaults and reading from yaml file"""
     def __init__(self):
         """"nothing """
-        self.settings = dict()
+        self.settings = {}
         self.__color_palette = None
         self.__color_index_map = None
         self.__color_map = None
@@ -57,25 +53,25 @@ class TraceSettings():
 
     def flatten_settings(self, settings):
         """ reduce the hierarchical dictionary to a flat one, inserting ':' between keys """
-        res = dict()
+        res = {}
         for key, val in settings.items():
             if isinstance(val, dict):
                 flat_val = self.flatten_settings(val)
-                for vkey, vval in flat_val.items():
-                    res[key+':'+vkey] = vval
+                for v_key, v_val in flat_val.items():
+                    res[key+':'+v_key] = v_val
             else:
                 res[key] = val
         return res
 
-    def parse_settings(self, settingsfile):
+    def parse_settings(self, settings_file):
         """ parse YAML file with settings. """
         try:
-            stream = open(settingsfile, 'r')
+            stream = open(settings_file, 'r', encoding="utf-8")
             yaml_settings = yaml_load(stream, yaml_Loader)
             self.__init__()
             self.settings = self.flatten_settings(yaml_settings)
         except FileNotFoundError:
-            raise TraceSettingsException("Warning: Settings file ({0}) does not exist.".format(settingsfile))
+            raise TraceSettingsException(f"Warning: Settings file ({settings_file}) does not exist.")
 
     def read_yaml(self, file):
         """ read the YAML file and parse it """
@@ -84,10 +80,9 @@ class TraceSettings():
     def __get_value(self, tag):
         if tag in self.settings:
             return self.settings[tag]
-        elif tag in DEFAULTS:
+        if tag in DEFAULTS:
             return DEFAULTS[tag]
-        else:
-            return None
+        return None
 
     def __set_value(self, tag, value):
         self.settings[tag] = value
@@ -111,6 +106,7 @@ class TraceSettings():
         return self.__set_value('layout:unit', value)
 
     def set_auto_unit(self):
+        """should automatically set unit - not implemented, set to 1.0"""
         print("warning: set_auto_unit not implemented, setting default value 1.0")
         return self.__set_value('layout:unit', 1.0)
 
@@ -130,7 +126,7 @@ class TraceSettings():
         """ returns the font """
         return self.__get_value('layout:font')
 
-    def fontsize(self):
+    def font_size(self):
         """ returns the font """
         return self.__get_value('layout:font-size')
 
@@ -146,104 +142,104 @@ class TraceSettings():
         """ return the length of the plot in units """
         _val = self.__get_value('layout:trace-length')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:trace-length should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def length_extension(self):
         """ return the relative extension of the trace length """
         _val = self.__get_value('layout:trace-length-extension')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             raise TraceSettingsException("layout:trace-length-extension should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
 
     def margin_top(self):
         """ return the top margin in mm """
         _val = self.__get_value('layout:margin-top')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:margin-top should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def margin_bottom(self):
         """ return the bottom margin in mm """
         _val = self.__get_value('layout:margin-bottom')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:margin-bottom should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def label_separation(self):
         """ return the horizontal distance between labels and chart in mm """
         _val = self.__get_value('layout:label-separation')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:label-separation should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def tick_length(self):
         """ return the length of the extending tick marks along the chart in mm """
         _val = self.__get_value('layout:tick-length')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:tick-length should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def tick_number_separation(self):
         """ return the separation between tick and numbers """
         _val = self.__get_value('layout:tick-number-separation')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:tick-number-separation should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
-    def column_linewidth(self):
+    def column_line_width(self):
         """ return the line width of the vertical lines in the chart """
         _val = self.__get_value('layout:column-linewidth')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:column-linewidth should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
-    def border_linewidth(self):
+    def border_line_width(self):
         """ return the line width of the border lines in the chart """
         _val = self.__get_value('layout:border-linewidth')
         try:
-            _tlen = float(_val)
+            _t_len = float(_val)
         except ValueError:
             if _val=='auto':
                 return _val
             raise TraceSettingsException("layout:border-linewidth should be a number in settings.")
-        return  _tlen
+        return  _t_len
 
     def origin(self):
         """ return the coordinates of the origin in units """
         _val = self.__get_value('layout:origin')
-        if not type(_val) is list:
+        if not isinstance(_val,list):
             raise TraceSettingsException("layout:origin should be a pair of numbers in settings.")
         if not len(_val) == 2:
             raise TraceSettingsException("layout:origin should be a pair of numbers in settings.")
@@ -269,6 +265,7 @@ class TraceSettings():
         self.__set_value('layout:trace-length', length)
 
     def set_auto_length(self):
+        """Should set auto length - not implemented, setting to 100"""
         print("warning: set_auto_length not implemented, setting default value 100.0")
         return self.__set_value('layout:trace-length', 100.0)
 
@@ -368,9 +365,9 @@ class TraceSettings():
                         result = act_max
         return result
 
-    def __max_time_eventseqs(self, eventseqs):
+    def __max_time_event_seqs(self, event_seqs):
         result = 0.0
-        for _, seq in eventseqs:
+        for _, seq in event_seqs:
             if not seq is None:
                 seq_max = seq[len(seq) - 1]
                 if seq_max > result:
@@ -378,11 +375,15 @@ class TraceSettings():
         return result
 
     def default_unit(self, actors):
+        """Determine default unit"""
         length = self.__max_time_gantt(actors)
+        if length <= 0:
+            return 1
         return mathpow(10.0, floor(log10(length))-1)
 
-    def default_unit_vectors(self, eventseqs):
-        length = self.__max_time_eventseqs(eventseqs)
+    def default_unit_vectors(self, event_seqs):
+        """Determine default unit vectors"""
+        length = self.__max_time_event_seqs(event_seqs)
         return mathpow(10.0, floor(log10(length))-1)
 
     def default_length_gantt(self, actors):
@@ -392,9 +393,10 @@ class TraceSettings():
             result = result / self.unit()
         return result * (1+self.length_extension())
 
-    def default_length_vectors(self, eventseqs):
-        """ determine the length of the figure based on the event sequences in the trace in units. """
-        result = self.__max_time_eventseqs(eventseqs)
+    def default_length_vectors(self, event_seqs):
+        """ determine the length of the figure based on the event sequences in the
+        trace in units. """
+        result = self.__max_time_event_seqs(event_seqs)
         if not self.unit() is None:
             result = result / self.unit()
         return result * (1+self.length_extension())
@@ -412,19 +414,19 @@ class TraceSettings():
         result = dict()
         if self.settings is None:
             return result
-        for key in self.settings:
+        for key, val in self.settings.items():
             if key.startswith(node_label):
-                result[key[len(node_label)+1:]] = self.settings[key]
+                result[key[len(node_label)+1:]] = val
         return result
 
     def groups(self):
         """ returns the groups of actors that are drawn on a single row """
         if self.__includes_label('structure:groups'):
             return self.__get_subtree('structure:groups')
-        else:
-            return []
+        return []
 
     def group(self, group):
+        """Return group setting"""
         return self.settings['structure:groups:'+group]
 
     def __read_color_palette(self):
@@ -445,13 +447,14 @@ class TraceSettings():
                 # in the latter case the names are created by the cartesian product of
                 # both lists to allow easy scenario specification
                 if isinstance(act, list):
-                    for scen in act[0]:
-                        for scact in act[1]:
-                            self.__structure[group].append(scen+SCENARIO_SEPARATOR+scact)
+                    for scenario in act[0]:
+                        for sc_act in act[1]:
+                            self.__structure[group].append(scenario+SCENARIO_SEPARATOR+sc_act)
                 else:
                     self.__structure[group].append(act)
 
     def structure(self):
+        """Get structure."""
         self.__read_structure()
         return self.__structure
 
@@ -460,7 +463,7 @@ class TraceSettings():
         self.__color_index_map = self.__get_subtree('colors:color-map')
 
         color_palette = self.color_palette()
-        self.__color_map = dict()
+        self.__color_map = {}
 
         self.__read_structure()
 
@@ -484,31 +487,33 @@ class TraceSettings():
         if self.__color_palette is None:
             self.__read_color_palette()
             return self.__color_palette
+        return self.__color_palette
 
     def color_palette(self):
         """ return the color palette, but default to the fill color palette """
-        return self._color_palette_with_default(COLORPALETTE_FILLS)
+        return self._color_palette_with_default(COLOR_PALETTE_FILLS)
 
     def color_palette_lines(self):
         """ return the color palette, but default to the lines color palette """
-        return self._color_palette_with_default(COLORPALETTE_LINES)
+        return self._color_palette_with_default(COLOR_PALETTE_LINES)
 
     def set_default_color_palette_fill(self):
-        """ set the defult color palette for fills"""
+        """ set the default color palette for fills"""
         if 'colors:palette' in self.settings:
             self.settings.pop('colors:palette')
-        self.__color_palette = COLORPALETTE_FILLS
+        self.__color_palette = COLOR_PALETTE_FILLS
         return self.__color_palette
 
     def set_default_color_palette_lines(self):
-        """ set the defult color palette for lines"""
+        """ set the default color palette for lines"""
         if 'colors:palette' in self.settings:
             self.settings.pop('colors:palette')
-        self.__color_palette = COLORPALETTE_LINES
+        self.__color_palette = COLOR_PALETTE_LINES
         return self.__color_palette
 
     def color_map(self):
-        """ return a dict mapping actor names to colors. If nothing is specified in the settings it returns an empty dict. """
+        """ return a dict mapping actor names to colors. If nothing is specified in
+        the settings it returns an empty dict. """
         # if none specified return empty map
         if not self.__includes_label('colors:color-map'):
             return None
@@ -518,23 +523,23 @@ class TraceSettings():
         # return map
         return self.__color_map
 
-    def set_default_actor_color_map(self, actornames):
+    def set_default_actor_color_map(self, actor_names):
         """ set the color map for the given list of actor names """
         self.color_palette()
         self.__color_index_map = dict()
         self.__color_map = dict()
         cix = 0
-        for actname in actornames:
-            self.__color_index_map[actname] = cix
-            self.__color_map[actname] = self.__color_palette[cix]
+        for act_name in actor_names:
+            self.__color_index_map[act_name] = cix
+            self.__color_map[act_name] = self.__color_palette[cix]
             cix = (cix + 1) % len(self.__color_palette)
         self.settings['colors:color-map'] = self.__color_map
 
     def set_default_scenario_color_map(self, actors):
         """ set the scenario color map for the given list of actors """
         self.color_palette()
-        self.__color_index_map = dict()
-        self.__color_map = dict()
+        self.__color_index_map = {}
+        self.__color_map = {}
         scenarios = set()
         for _, acts in actors:
             for act in acts:
@@ -546,13 +551,13 @@ class TraceSettings():
             cix = (cix + 1) % len(self.__color_palette)
         self.settings['colors:color-map'] = self.__color_map
 
-    def set_default_sequence_color_map(self, tokennames):
+    def set_default_sequence_color_map(self, token_names):
         """ set the color map for the given list of token names """
         self.color_palette_lines()
-        self.__color_index_map = dict()
-        self.__color_map = dict()
+        self.__color_index_map = {}
+        self.__color_map = {}
         cix = 0
-        for token in tokennames:
+        for token in token_names:
             self.__color_index_map[token] = cix
             self.__color_map[token] = self.__color_palette[cix]
             cix = (cix + 1) % len(self.__color_palette)
@@ -562,5 +567,3 @@ class TraceSettings():
         """ set the color map """
         self.settings['colors:color-map'] = color_map
         self.__color_map = color_map
-
- 
