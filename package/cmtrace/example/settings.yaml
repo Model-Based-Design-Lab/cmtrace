@@ -8,6 +8,8 @@ graphics:
     # background color for alternate rows of the chart
     row-background-color: [240, 240, 240]
     background-color: [255, 255, 255]
+    # show the provided firing text labels
+    show-text-labels: true
 
 
 layout:

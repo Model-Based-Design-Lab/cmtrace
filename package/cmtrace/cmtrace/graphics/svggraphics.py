@@ -89,14 +89,15 @@ class SVGTraceDrawer:
                 self.canvas.draw_rect(top_left, width_height, f_color,
                                       stroke_width=self.settings.firing_stroke_width())
                 if firing[4] is not None:
-                    self.canvas.draw_text(
-                        firing[4],
-                        (top_left[0]+width_height[0]/2, top_left[1]+width_height[1]/2),
-                        font=self.settings.font(),
-                        font_size=0.5*self.settings.font_size(),
-                        text_anchor="middle",
-                        alignment_baseline="central"
-                    )
+                    if self.settings.show_text_labels():
+                        self.canvas.draw_text(
+                            firing[4],
+                            (top_left[0]+width_height[0]/2, top_left[1]+width_height[1]/2),
+                            font=self.settings.font(),
+                            font_size=0.5*self.settings.font_size(),
+                            text_anchor="middle",
+                            alignment_baseline="central"
+                        )
 
             f_count += 1
             last_end = f_start+f_duration
@@ -131,13 +132,14 @@ class SVGTraceDrawer:
             for actor in actor_list:
                 if not actor is None:
                     fix = 0
-                    if firing[2] is not None:
-                        iteration = int(firing[2])
-                    else:
-                        iteration = fix
                     for firing in actor.firing_intervals():
+                        if firing[2] is not None:
+                            iteration = int(firing[2])
+                        else:
+                            iteration = fix
+                        textLabel = firing[3]
                         scaled_firings.append([firing[0]/unit, firing[1]/unit,
-                                               actor.name, actor.scenario, firing[3], iteration])
+                                               actor.name, actor.scenario, textLabel, iteration])
                         fix += 1
             self.draw_firings(scaled_firings, lb[mix], ub[mix])
             mix += 1

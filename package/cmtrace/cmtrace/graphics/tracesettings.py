@@ -30,6 +30,7 @@ DEFAULTS = {
     'graphics:firing-color-mode': 'by-actor',
     'graphics:vector-color-mode': 'by-iteration',
     'graphics:alternate-color': True,
+    'graphics:show-text-labels': True,
     'graphics:background-color': (255, 255, 255),
     'graphics:row-background-color': (240, 240, 240)
 }
@@ -300,6 +301,10 @@ class TraceSettings():
     def background_color(self):
         """ returns the background color for the chart """
         return self.__get_value('graphics:background-color')
+    
+    def show_text_labels(self):
+        """ returns whether to show the firing text labels """
+        return self.__get_value('graphics:show-text-labels')
 
     def row_background_color(self):
         """ returns the background color for alternate rows of the chart """
